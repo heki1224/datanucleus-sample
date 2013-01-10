@@ -14,8 +14,13 @@
 		<property name="configLocation" value="classpath:datanucleus.properties" />
 	</bean>
 
+	<bean id="persistenceManagerFactoryProxy"
+		class="org.springframework.orm.jdo.TransactionAwarePersistenceManagerFactoryProxy">
+		<property name="targetPersistenceManagerFactory" ref="pmf" />
+	</bean>
+
 	<bean id="transactionManager" class="org.springframework.orm.jdo.JdoTransactionManager">
-		<property name="persistenceManagerFactory" ref="pmf" />
+		<property name="persistenceManagerFactory" ref="persistenceManagerFactoryProxy" />
 	</bean>
 
 	<tx:annotation-driven />

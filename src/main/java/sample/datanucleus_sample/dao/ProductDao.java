@@ -7,6 +7,7 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,7 +15,9 @@ import sample.datanucleus_sample.model.MyClass;
 
 @Repository
 public class ProductDao {
+
 	@Autowired
+	@Qualifier("persistenceManagerFactoryProxy")
 	private PersistenceManagerFactory persistenceManagerFactory;
 
 	public Object loadProductsByCategory(String category) {
@@ -28,11 +31,13 @@ public class ProductDao {
 		}
 	}
 
-	@Transactional
+	@Transactional(rollbackFor = RuntimeException.class)
 	public MyClass save(MyClass input) {
 		PersistenceManager pm = this.persistenceManagerFactory.getPersistenceManager();
 		try {
-			return pm.makePersistent(input);
+			MyClass result = pm.makePersistent(input);
+			throw new RuntimeException();
+			// return result;
 		} finally {
 			pm.close();
 		}

@@ -45,7 +45,7 @@ public class ProductDaoTest {
 		MyClass actual = (MyClass) dao.loadProductsByCategory("firstName");
 		assertThat(actual.getId(), is(10L));
 
-		actual.setId(101L);
+		actual.setId(106L);
 		dao.save(actual);
 	}
 
