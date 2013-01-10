@@ -24,7 +24,7 @@ public class Main {
 		class1.setId(11L);
 		class1.setFirstName("firstName");
 		
-		pm.makePersistent(class1);
+//		pm.makePersistent(class1);
 
 		Query query = pm.newQuery(MyClass.class);
 		List<MyClass> results = (List<MyClass>) query.execute();
