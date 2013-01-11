@@ -20,12 +20,23 @@ public class ProductDao {
 	@Qualifier("persistenceManagerFactoryProxy")
 	private PersistenceManagerFactory persistenceManagerFactory;
 
-	public Object loadProductsByCategory(String category) {
+	public List<MyClass> loadProducts() {
 		PersistenceManager pm = this.persistenceManagerFactory.getPersistenceManager();
 		try {
 			Query query = pm.newQuery(MyClass.class);
 			List<MyClass> results = (List<MyClass>) query.execute();
-			return results.get(0);
+			return (List<MyClass>) pm.detachCopyAll(results);
+		} finally {
+			pm.close();
+		}
+	}
+
+	@Transactional(rollbackFor = RuntimeException.class)
+	public MyClass create(MyClass input) {
+		PersistenceManager pm = this.persistenceManagerFactory.getPersistenceManager();
+		try {
+			MyClass result = pm.makePersistent(input);
+			return result;
 		} finally {
 			pm.close();
 		}
@@ -36,8 +47,7 @@ public class ProductDao {
 		PersistenceManager pm = this.persistenceManagerFactory.getPersistenceManager();
 		try {
 			MyClass result = pm.makePersistent(input);
-			throw new RuntimeException();
-			// return result;
+			return result;
 		} finally {
 			pm.close();
 		}

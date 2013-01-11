@@ -14,7 +14,7 @@
 	<appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="File" value="sample.log" />
 		<param name="Encoding" value="UTF-8" />
-		<param name="threshold" value="DEBUG" />
+		<param name="threshold" value="INFO" />
 		<param name="Append" value="true" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d %-5p: %l - %m%n" />

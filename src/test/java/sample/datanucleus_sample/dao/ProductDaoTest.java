@@ -1,7 +1,7 @@
 package sample.datanucleus_sample.dao;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import java.util.Date;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -41,12 +41,12 @@ public class ProductDaoTest {
 	}
 
 	@Test
-	public void testLoadProductsByCategory() {
-		MyClass actual = (MyClass) dao.loadProductsByCategory("firstName");
-		assertThat(actual.getId(), is(10L));
-
-		actual.setId(106L);
-		dao.save(actual);
+	public void testLoadProducts() {
+		List<MyClass> actual = (List<MyClass>) dao.loadProducts();
+		for (MyClass i : actual) {
+			System.out.println(i.getId());
+			i.setFirstName("yyyymmdd" + new Date().getTime());
+			dao.save(i);
+		}
 	}
-
 }

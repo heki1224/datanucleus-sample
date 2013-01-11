@@ -1,5 +1,7 @@
 package sample.datanucleus_sample.model;
 
+import java.io.Serializable;
+
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.Extension;
 import javax.jdo.annotations.Extensions;
@@ -10,7 +12,12 @@ import javax.jdo.annotations.PrimaryKey;
 @Extensions({
 	@Extension(vendorName = "datanucleus", key = "hbase.columnFamily.meta.bloomFilter", value = "ROWKEY"),
 	@Extension(vendorName = "datanucleus", key = "hbase.columnFamily.meta.inMemory", value = "true") })
-public class MyClass {
+public class MyClass implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 798918514295302556L;
+
 	@PrimaryKey
 	private long id;
 
