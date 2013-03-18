@@ -2,7 +2,12 @@ package sample.datanucleus_sample.dao;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
+import javax.jdo.JDOHelper;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -17,9 +22,11 @@ import sample.datanucleus_sample.model.MyClass;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-	"file:src/main/resources/spring/app-config.xml",
-	"file:src/main/resources/spring/db-config.xml" })
+	"file:src/test/resources/spring/app-config.xml",
+	"file:src/test/resources/spring/db-config.xml" })
 public class ProductDaoTest {
+
+	private static final Log LOG = LogFactory.getLog(ProductDaoTest.class);
 
 	@Autowired
 	private ProductDao dao;
@@ -43,10 +50,19 @@ public class ProductDaoTest {
 	@Test
 	public void testLoadProducts() {
 		List<MyClass> actual = (List<MyClass>) dao.loadProducts();
-		for (MyClass i : actual) {
-			System.out.println(i.getId());
-			i.setFirstName("yyyymmdd" + new Date().getTime());
-			dao.save(i);
+		LOG.info("before load size=" + actual.size());
+		MyClass input = new MyClass();
+		Random r = new Random(System.currentTimeMillis());
+		input.setId(r.nextLong());
+		LOG.info("input id=" + input.getId());
+		input.setFirstName("yyyymmdd" + new Date().getTime());
+		try {
+			dao.save(input);
+			LOG.info("JDO version=" + JDOHelper.getVersion(input));
+		} catch (Exception e) {
+			LOG.info(e);
 		}
+		actual = (List<MyClass>) dao.loadProducts();
+		LOG.info("after load size=" + actual.size());
 	}
 }

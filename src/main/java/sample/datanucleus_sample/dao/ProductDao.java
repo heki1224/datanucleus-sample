@@ -22,34 +22,34 @@ public class ProductDao {
 
 	public List<MyClass> loadProducts() {
 		PersistenceManager pm = this.persistenceManagerFactory.getPersistenceManager();
-		try {
-			Query query = pm.newQuery(MyClass.class);
-			List<MyClass> results = (List<MyClass>) query.execute();
-			return (List<MyClass>) pm.detachCopyAll(results);
-		} finally {
-			pm.close();
-		}
+		Query query = pm.newQuery(MyClass.class);
+		List<MyClass> results = (List<MyClass>) query.execute();
+		return (List<MyClass>) pm.detachCopyAll(results);
 	}
 
-	@Transactional(rollbackFor = RuntimeException.class)
+	@Transactional(rollbackFor = Exception.class)
 	public MyClass create(MyClass input) {
 		PersistenceManager pm = this.persistenceManagerFactory.getPersistenceManager();
-		try {
-			MyClass result = pm.makePersistent(input);
-			return result;
-		} finally {
-			pm.close();
-		}
+		MyClass result = pm.makePersistent(input);
+		return result;
 	}
 
-	@Transactional(rollbackFor = RuntimeException.class)
+	@Transactional(rollbackFor = Exception.class)
 	public MyClass save(MyClass input) {
 		PersistenceManager pm = this.persistenceManagerFactory.getPersistenceManager();
-		try {
-			MyClass result = pm.makePersistent(input);
-			return result;
-		} finally {
-			pm.close();
-		}
+		MyClass result = pm.makePersistent(input);
+		return result;
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	public void delete(MyClass input) {
+		PersistenceManager pm = this.persistenceManagerFactory.getPersistenceManager();
+		pm.deletePersistent(input);
+	}
+
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteAll(List<MyClass> list) {
+		PersistenceManager pm = this.persistenceManagerFactory.getPersistenceManager();
+		pm.deletePersistentAll(list);
 	}
 }
