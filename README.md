@@ -4,8 +4,8 @@ DataNucleus AccessPlatform HBase Sample (JDO)
   
 Environment
 ----------------
-Hadoop : CDH 4.2.0 (hadoop 2.0.0) 
-HBase : CDH 4.2.0 (hbase 0.94.2) 
+Hadoop : CDH 4.2.0 (hadoop 2.0.0)  
+HBase : CDH 4.2.0 (hbase 0.94.2)  
 DataNucleus : 3.2.1  
 Spring Framework : 3.2.2  
   
