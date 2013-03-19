@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,6 +18,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.jdo.JdoOptimisticLockingFailureException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -26,6 +29,8 @@ import sample.datanucleus_sample.model.User;
 	"file:src/main/resources/spring/app-config.xml",
 	"file:src/main/resources/spring/db-config.xml" })
 public class UserDaoTest {
+
+	private static final Log LOG = LogFactory.getLog(UserDaoTest.class);
 
 	@Autowired
 	private UserDao dao;
@@ -40,6 +45,7 @@ public class UserDaoTest {
 
 	@Before
 	public void setUp() throws Exception {
+		dao.deleteAll();
 	}
 
 	@After
@@ -132,10 +138,19 @@ public class UserDaoTest {
 		result.setSex(0);
 		User result2 = dao.save(result);
 		assertThat(result2.getVersion(), is(2L));
-		User result3 = dao.save(result);
+		User result3 = null;
+		try {
+			result.setSex(1);
+			result3 = dao.save(result);
+		} catch (JdoOptimisticLockingFailureException e) {
+			LOG.info(e);
+		}
 		assertThat(result3, nullValue());
 
 		User dresult = dao.find(3L);
+
+		assertThat(dresult.getSex(), is(0));
+
 		dao.delete(dresult);
 	}
 }

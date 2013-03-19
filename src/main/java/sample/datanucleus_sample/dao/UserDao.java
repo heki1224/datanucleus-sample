@@ -70,23 +70,7 @@ public class UserDao {
 	public User save(User input) {
 		User result = null;
 		PersistenceManager pm = this.persistenceManagerFactory.getPersistenceManager();
-		try {
-			User o = pm.getObjectById(User.class, input.getId());
-			if (input.getVersion() != o.getVersion()) {
-				// 楽観的排他制御
-				LOG.info("Different Version.");
-				return result;
-			}
-			// 更新する場合
-			o.setFirstName(input.getFirstName());
-			o.setLastName(input.getLastName());
-			o.setBirthDay(input.getBirthDay());
-			o.setSex(input.getSex());
-			result = o;
-		} catch (JDOObjectNotFoundException e) {
-			// 1件も存在しない場合
-			result = pm.makePersistent(input);
-		}
+		result = pm.makePersistent(input);
 		return result;
 	}
 
@@ -128,5 +112,21 @@ public class UserDao {
 	public void delete(User input) {
 		PersistenceManager pm = this.persistenceManagerFactory.getPersistenceManager();
 		pm.deletePersistent(input);
+	}
+
+	/**
+	 * 削除
+	 * 
+	 * @param input
+	 */
+	@Transactional(rollbackFor = Exception.class)
+	public void deleteAll() {
+		List<User> result = null;
+		PersistenceManager pm = this.persistenceManagerFactory.getPersistenceManager();
+		Query query = pm.newQuery(User.class);
+		result = (List<User>) query.execute();
+		if (result != null && result.size() > 0) {
+			pm.deletePersistentAll(result);
+		}
 	}
 }
