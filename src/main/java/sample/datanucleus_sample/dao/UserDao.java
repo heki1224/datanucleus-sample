@@ -85,13 +85,7 @@ public class UserDao {
 		User result = null;
 		PersistenceManager pm = this.persistenceManagerFactory.getPersistenceManager();
 		try {
-			User o = pm.getObjectById(User.class, input.getId());
-			// 更新する場合
-			o.setFirstName(input.getFirstName());
-			o.setLastName(input.getLastName());
-			o.setBirthDay(input.getBirthDay());
-			o.setSex(input.getSex());
-			result = o;
+			result = pm.makePersistent(input);
 			throw new RuntimeException();
 		} catch (JDOObjectNotFoundException e) {
 			// 1件も存在しない場合
